@@ -4,7 +4,7 @@
 EAPI=8
 
 inherit desktop linux-info optfeature pax-utils xdg
-FIREFOX_PKG_NAME="firefox"
+FIREFOX_PKG_NAME="firefox-dev"
 
 MOZ_PV="${PV%.*}b7"
 MOZ_PN="firefox-${MOZ_PV}"
@@ -94,7 +94,7 @@ src_unpack() {
 
 src_install() {
 	# Set MOZILLA_FIVE_HOME
-	local MOZILLA_FIVE_HOME="/opt/${PN}"
+	local MOZILLA_FIVE_HOME="/opt/${MOZ_PN}"
 
 	dodir /opt
 	pushd "${ED}"/opt &>/dev/null || die
