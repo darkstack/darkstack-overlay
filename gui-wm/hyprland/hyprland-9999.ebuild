@@ -81,7 +81,7 @@ BDEPEND="
 	virtual/pkgconfig
 "
 PATCHES=(
-	"${FILESDIR}/hyprland-0.31.0-fix-log-headers.patch"
+	"${FILESDIR}/0001-Fix-Compile-error-on-non-PCH-system.patch"
 )
 
 pkg_setup() {
