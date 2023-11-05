@@ -80,19 +80,21 @@ BDEPEND="
 	dev-vcs/git
 	virtual/pkgconfig
 "
+PATCHES=(
+	"${FILESDIR}/hyprland-0.31.0-fix-log-headers.patch"
+)
 
 pkg_setup() {
 	[[ ${MERGE_TYPE} == binary ]] && return
 
-	if tc-is-gcc; then
-		STDLIBVER=$(echo '#include <string>' | $(tc-getCXX) -x c++ -dM -E - | \
-					grep GLIBCXX_RELEASE | sed 's/.*\([1-9][0-9]\)/\1/')
-
-		if ! [[ ${STDLIBVER} -ge 12 ]]; then
-			die "Hyprland requires >=sys-devel/gcc-12.1.0 to build"
-		fi
-	elif [[ $(clang-major-version) -lt 16 ]]; then
-		die "Hyprland requires >=sys-devel/clang-16.0.3 to build";
+	if tc-is-gcc && ver_test $(gcc-version) -lt 13 ; then
+		eerror "Hyprland requires >=sys-devel/gcc-13 to build"
+		eerror "Please upgrade GCC: emerge -v1 sys-devel/gcc"
+		die "GCC version is too old to compile Hyprland!"
+	elif tc-is-clang && ver_test $(clang-version) -lt 16 ; then
+		eerror "Hyprland requires >=sys-devel/clang-16 to build"
+		eerror "Please upgrade Clang: emerge -v1 sys-devel/clang"
+		die "Clang version is too old to compile Hyprland!"
 	fi
 }
 
@@ -103,11 +105,8 @@ src_prepare() {
 		cd "${S}" || die
 	fi
 
-#	eapply "${FILESDIR}/hyprland-0.28.0-no-wlroots-automagic-r1.patch"
-
 	default
 }
-
 
 src_configure() {
 	local emesonargs=(
@@ -135,3 +134,4 @@ src_install() {
 	# devel tag includes wlroots .pc and .a files still
 	rm -rf "${ED}"/usr/$(get_libdir)/ || die
 }
+
