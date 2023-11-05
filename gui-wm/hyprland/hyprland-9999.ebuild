@@ -108,11 +108,15 @@ src_prepare() {
 	default
 }
 
+
 src_configure() {
 	local emesonargs=(
 		$(meson_feature legacy-renderer legacy_renderer)
-		$(meson_feature X xwayland)
 		$(meson_feature systemd)
+		$(meson_feature X xwayland)
+		$(meson_feature X wlroots:xwayland)
+		-Dwlroots:backends=drm,libinput$(usev X ',x11')
+		-Dwlroots:xcb-errors=disabled
 	)
 
 	meson_src_configure
@@ -120,4 +124,14 @@ src_configure() {
 
 src_install() {
 	meson_src_install --skip-subprojects wlroots
+	meson_src_install --tags devel
+
+	# Wlroots headers are required by hyprland-plugins and the pkgconfig file expects
+	# them to be in /usr/include/hyprland/wlroots, despite this they aren't installed there.
+	# Ideally you could override includedir per subproject and the install tags would
+	# be granular enough to only install headers. But its not requiring this.
+	mkdir "${ED}"/usr/include/hyprland/wlroots || die
+	mv "${ED}"/usr/include/wlr "${ED}"/usr/include/hyprland/wlroots || die
+	# devel tag includes wlroots .pc and .a files still
+	rm -rf "${ED}"/usr/$(get_libdir)/ || die
 }
