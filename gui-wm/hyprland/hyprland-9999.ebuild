@@ -80,9 +80,9 @@ BDEPEND="
 	dev-vcs/git
 	virtual/pkgconfig
 "
-PATCHES=(
-	"${FILESDIR}/0001-Fix-Compile-error-on-non-PCH-system.patch"
-)
+#PATCHES=(
+#	"${FILESDIR}/0001-Fix-Compile-error-on-non-PCH-system.patch"
+#)
 
 pkg_setup() {
 	[[ ${MERGE_TYPE} == binary ]] && return
