@@ -111,7 +111,14 @@ pkg_setup() {
 	fi
 }
 
+src_prepare() {
+	PATCHES+=( "${FILESDIR}"/0001-lol.patch )
+	default
+}
+
+
 src_configure() {
+
 	local emesonargs=(
 		$(meson_feature legacy-renderer legacy_renderer)
 		$(meson_feature systemd)

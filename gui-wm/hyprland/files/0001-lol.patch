@@ -1,0 +1,25 @@
+From 4300be95c170b543b03ebc77d124073808c27f50 Mon Sep 17 00:00:00 2001
+From: darkstack <1835601+darkstack@users.noreply.github.com>
+Date: Wed, 15 May 2024 19:16:16 +0200
+Subject: [PATCH] lol
+
+---
+ src/managers/SeatManager.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/managers/SeatManager.cpp b/src/managers/SeatManager.cpp
+index e3b45c64..6650a4af 100644
+--- a/src/managers/SeatManager.cpp
++++ b/src/managers/SeatManager.cpp
+@@ -6,7 +6,7 @@
+ #include "../Compositor.hpp"
+ #include "../devices/IKeyboard.hpp"
+ #include <algorithm>
+-
++#include <ranges>
+ CSeatManager::CSeatManager() {
+     listeners.newSeatResource = PROTO::seat->events.newSeatResource.registerListener([this](std::any res) { onNewSeatResource(std::any_cast<SP<CWLSeatResource>>(res)); });
+ }
+-- 
+2.45.0
+
