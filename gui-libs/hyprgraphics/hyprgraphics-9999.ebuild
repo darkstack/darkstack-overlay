@@ -3,10 +3,10 @@
 
 EAPI=8
 
-inherit meson toolchain-funcs
+inherit cmake toolchain-funcs
 
 DESCRIPTION="A dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
-HOMEPAGE="https://github.com/hyprwm/Hyprland"
+HOMEPAGE="https://github.com/hyprwm/hyprgraphics"
 
 if [[ "${PV}" = *9999 ]]; then
 	inherit git-r3
@@ -20,52 +20,25 @@ fi
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="X legacy-renderer systemd"
+IUSE=""
 
-# hyprpm (hyprland plugin manager) requires the dependencies at runtime
-# so that it can clone, compile and install plugins.
 HYPRPM_RDEPEND="
-	app-alternatives/ninja
 	>=dev-build/cmake-3.30
-	dev-build/meson
 	dev-vcs/git
 	virtual/pkgconfig
 "
 RDEPEND="
 	${HYPRPM_RDEPEND}
-	dev-cpp/tomlplusplus
-	dev-libs/glib:2
-	dev-libs/libinput
-	>=dev-libs/udis86-1.7.2
-	>=dev-libs/wayland-1.22.90
-	>=gui-libs/aquamarine-0.4.2
-	>=gui-libs/hyprcursor-0.1.9
-	media-libs/libglvnd
-	x11-libs/cairo
-	x11-libs/libdrm
-	x11-libs/libxkbcommon
-	x11-libs/pango
-	x11-libs/pixman
-	x11-libs/libXcursor
-	X? (
-		x11-libs/libxcb:0=
-		x11-base/xwayland
-		x11-libs/xcb-util-errors
-		x11-libs/xcb-util-wm
-	)
 "
 DEPEND="
 	${RDEPEND}
+	media-libs/libjxl
 	>=dev-libs/hyprland-protocols-0.4
-	>=dev-libs/hyprlang-0.3.2
 	>=dev-libs/wayland-protocols-1.36
-	>=gui-libs/hyprutils-0.2.3
 "
 BDEPEND="
 	|| ( >=sys-devel/gcc-14:* >=llvm-core/clang-18:* )
-	app-misc/jq
 	dev-build/cmake
-	>=dev-util/hyprwayland-scanner-0.3.10
 	virtual/pkgconfig
 "
 
@@ -84,11 +57,21 @@ pkg_setup() {
 }
 
 src_configure() {
-	local emesonargs=(
-		$(meson_feature legacy-renderer legacy_renderer)
-		$(meson_feature systemd)
-		$(meson_feature X xwayland)
-	)
 
-	meson_src_configure
+	local mycmakeargs=(
+	--no-warn-unused-cli 
+	-DCMAKE_BUILD_TYPE:STRING=Release 
+	-DCMAKE_INSTALL_PREFIX:PATH=/usr 
+	)
+	cmake_src_configure
+
 }
+
+src_compile(){
+	cmake_src_compile
+}
+
+src_install() {
+	cmake_src_install
+}
+
