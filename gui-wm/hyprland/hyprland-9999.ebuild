@@ -33,6 +33,8 @@ HYPRPM_RDEPEND="
 "
 RDEPEND="
 	${HYPRPM_RDEPEND}
+	dev-libs/re2
+	gui-libs/hyprgraphics
 	dev-cpp/tomlplusplus
 	dev-libs/glib:2
 	dev-libs/libinput
