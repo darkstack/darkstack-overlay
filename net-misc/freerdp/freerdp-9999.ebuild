@@ -27,7 +27,7 @@ HOMEPAGE="https://www.freerdp.com/"
 
 LICENSE="Apache-2.0"
 SLOT="3"
-IUSE="aad alsa cpu_flags_arm_neon +client cups debug +ffmpeg +fuse gstreamer +icu jpeg kerberos openh264 pulseaudio sdl server smartcard systemd test usb valgrind wayland X xinerama xv sdl3"
+IUSE="aad alsa cpu_flags_arm_neon +client cups debug +ffmpeg +fuse gstreamer +icu jpeg kerberos openh264 pulseaudio sdl server smartcard systemd test usb valgrind wayland X xinerama xv"
 RESTRICT="!test? ( test )"
 
 BDEPEND+="
@@ -70,15 +70,6 @@ COMMON_DEPEND="
 	kerberos? ( virtual/krb5 )
 	openh264? ( media-libs/openh264:0= )
 	pulseaudio? ( media-libs/libpulse )
-	sdl? (
-		media-libs/libsdl2[haptic(+),joystick(+),sound(+),video(+)]
-		media-libs/sdl2-ttf
-	)
-
-	sdl3? (
-		media-libs/libsdl3[haptic(+),joystick(+),sound(+),video(+)]
-		media-libs/sdl3-ttf
-	)
 	server? (
 		X? (
 			x11-libs/libXcursor
@@ -93,6 +84,10 @@ COMMON_DEPEND="
 	smartcard? ( sys-apps/pcsc-lite )
 	systemd? ( sys-apps/systemd:0= )
 	client? (
+		sdl? (
+			media-libs/libsdl3
+			media-libs/sdl3-ttf
+		)
 		wayland? (
 			dev-libs/wayland
 			x11-libs/libxkbcommon
@@ -149,10 +144,10 @@ freerdp_configure() {
 		-DWITH_AAD=$(option aad)
 		-DWITH_ALSA=$(option alsa)
 		-DWITH_CCACHE=OFF
-		-DWITH_CLIENT=$(option client)
 
-		-DWITH_CLIENT_SDL=$(option sdl)
-		-DWITH_CLIENT_SDL3=$(option sdl3)
+		-DWITH_CLIENT=$(option client)
+		-DWITH_CLIENT_SDL2=OFF
+		-DWITH_CLIENT_SDL3=$(option_client sdl)
 
 		-DWITH_SAMPLE=OFF
 		-DWITH_CUPS=$(option cups)
@@ -184,6 +179,7 @@ freerdp_configure() {
 		-DWITH_WAYLAND=$(option_client wayland)
 		-DWITH_WEBVIEW=OFF
 		-DWITH_WINPR_TOOLS=$(option server)
+		-DDWITH_FDK_AAC=ON
 
 		"$@"
 	)
@@ -196,7 +192,9 @@ src_compile() {
 }
 
 src_test() {
-	local CMAKE_SKIP_TESTS=( TestBacktrace )
+	# TestBacktrace: bug 930636
+	# TestSynchCritical, TestSynchMultipleThreads: bug 951301
+	local CMAKE_SKIP_TESTS=( TestBacktrace TestSynchCritical TestSynchMultipleThreads )
 	if has network-sandbox ${FEATURES}; then
 		CMAKE_SKIP_TESTS+=( TestConnect )
 	fi
