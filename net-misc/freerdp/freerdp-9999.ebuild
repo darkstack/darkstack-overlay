@@ -179,7 +179,7 @@ freerdp_configure() {
 		-DWITH_WAYLAND=$(option_client wayland)
 		-DWITH_WEBVIEW=OFF
 		-DWITH_WINPR_TOOLS=$(option server)
-		-DDWITH_FDK_AAC=ON
+		-DWITH_FDK_AAC=ON
 
 		"$@"
 	)
