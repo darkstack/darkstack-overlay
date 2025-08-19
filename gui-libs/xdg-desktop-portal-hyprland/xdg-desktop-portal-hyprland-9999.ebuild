@@ -46,7 +46,6 @@ RDEPEND="
 
 BDEPEND="
 	>=dev-libs/wayland-protocols-1.24
-	>=dev-util/hyprwayland-scanner-0.4.2
 	virtual/pkgconfig
 	|| ( >=sys-devel/gcc-14:* >=llvm-core/clang-17:* )
 "
