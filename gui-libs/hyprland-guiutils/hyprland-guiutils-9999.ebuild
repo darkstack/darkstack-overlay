@@ -30,4 +30,5 @@ RDEPEND="
 	dev-libs/libzip
 	gnome-base/librsvg:2
 	x11-libs/cairo
+	dev-libs/hyprtoolkit
 "
