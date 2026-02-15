@@ -54,6 +54,7 @@ RDEPEND="
 	>=media-video/pipewire-1.0.6:=[sound-server]
 	sci-libs/fftw:3.0=
 	sci-libs/gsl:=
+	media-libs/libmysofa
 	webengine? ( dev-qt/qtwebengine:6[qml] )
 "
 DEPEND="${RDEPEND}
